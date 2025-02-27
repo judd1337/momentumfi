@@ -8,4 +8,14 @@ pub enum MomentumFiError{
     ArithmeticOverflow,
     #[msg("Please set a points per goal value less than 10000")]
     TooBigPointsValue,
+    #[msg("There are no reward points to claim")]
+    NoPointsToClaim,
+    #[msg("No authority to delete this account")]
+    UnauthorizedDelete,
+    #[msg("Couldn't fetch the price")]
+    InvalidPrice,
+    #[msg("Unauthorized access")]
+    UnauthorizedAccess,
+    #[msg("Returned an invalid timestamp")]
+    InvalidTimestamp,
 }

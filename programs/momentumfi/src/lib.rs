@@ -5,7 +5,9 @@ declare_id!("9Z61ua1wnAiVaJHZLJuTeZoSfWn1X9Nb9d42bZjut7U8");
 pub mod contexts;
 pub mod state;
 pub mod errors;
+pub mod utils;
 
+extern crate chrono;
 use crate::contexts::*;
 use crate::errors::*;
 
@@ -13,23 +15,31 @@ use crate::errors::*;
 pub mod momentumfi {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, points_per_goal: u16, authority: Option<Pubkey>) -> Result<()> {
-        ctx.accounts.init(points_per_goal, authority, &ctx.bumps)
+    pub fn initialize(ctx: Context<Initialize>, first_completed_points: u16, daily_points: u16) -> Result<()> {
+        ctx.accounts.init(first_completed_points, daily_points, &ctx.bumps)
     }
 
-    pub fn register_user(ctx: Context<RegisterUser>) -> Result<()> {
-        ctx.accounts.register_user(&ctx.bumps)
+    pub fn register_user_account(ctx: Context<RegisterUserAccount>) -> Result<()> {
+        ctx.accounts.register_user_account(&ctx.bumps)
     }
 
-    pub fn create_goal(ctx: Context<CreateGoal>, usd_goal: u64, deadline: Option<i64>) -> Result<()> {
-        ctx.accounts.create_goal(usd_goal, deadline, &ctx.bumps)
+    pub fn create_goal(ctx: Context<CreateGoal>, target_usd: u64, deadline: Option<i64>) -> Result<()> {
+        CreateGoal::create_goal(ctx, target_usd, deadline)
     }
 
     pub fn delete_goal(ctx: Context<DeleteGoal>) -> Result<()> {
-        ctx.accounts.delete_goal()
+        DeleteGoal::delete_goal()
     }
 
-    pub fn update_reward_points(ctx: Context<UpdateRewardPoints>) -> Result<()> {
-        UpdateRewardPoints::update_reward_points(ctx)
+    pub fn update_reward_points_admin(ctx: Context<UpdateRewardPointsAdmin>) -> Result<()> {
+        UpdateRewardPointsAdmin::update_reward_points_admin(ctx)
+    }
+
+    pub fn update_reward_points_user(ctx: Context<UpdateRewardPointsUser>) -> Result<()> {
+        UpdateRewardPointsUser::update_reward_points_user(ctx)
+    }
+
+    pub fn update_sol_price(ctx: Context<UpdateSolPrice>) -> Result<()> {
+        UpdateSolPrice::request_price_update(ctx)
     }
 }

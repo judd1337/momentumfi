@@ -5,8 +5,8 @@ pub struct UserAccount {
     pub owner: Pubkey,
     pub total_points: u64, // total points for this user account
     pub claimable_rewards: u64, // reward tokens available to claim
-    pub sol_amount: u64, // total amount of SOL (in lamports) in the related user account wallet
-    pub usd_value: u64, // total amount of SOL in the related user account wallet
+    pub sol_balance: u64, // Amount of SOL (in lamports) in the related user account wallet
+    pub usd_balance: u64,  // Cached USD value of user's SOL balance
     pub bump: u8,
 }
 

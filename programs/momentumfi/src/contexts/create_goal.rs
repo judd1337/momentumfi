@@ -6,6 +6,7 @@ use crate::state::GoalAccount;
 pub struct CreateGoal<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+
     #[account(
         init,
         payer = user,
@@ -20,16 +21,18 @@ pub struct CreateGoal<'info> {
 }
 
 impl<'info> CreateGoal<'info> {
-    pub fn create_goal(&mut self, usd_goal: u64, deadline: Option<i64>, bumps: &CreateGoalBumps) -> Result<()> {
+    pub fn create_goal(ctx: Context<CreateGoal>, target_usd: u64, deadline: Option<i64>) -> Result<()> {
         let clock = Clock::get()?;
-        self.goal_account.set_inner(GoalAccount { 
-            owner: self.user.key(), 
+        let bumps = &ctx.bumps;
+        ctx.accounts.goal_account.set_inner(GoalAccount { 
+            user: ctx.accounts.user.key(), 
             total_points: 0,
             creation_timestamp: clock.unix_timestamp,
             deadline: deadline.unwrap_or(0),
-            usd_goal,
+            target_usd,
             completed: false,
             first_completed_bonus: false,
+            last_daily_reward_timestamp: 0,
             bump: bumps.goal_account 
         });
 

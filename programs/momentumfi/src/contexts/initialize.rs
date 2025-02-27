@@ -11,7 +11,7 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = admin,
-        seeds = [b"config", admin.key().as_ref()],
+        seeds = [b"config"],
         bump,
         space = Config::INIT_SPACE,
     )]
@@ -34,15 +34,18 @@ pub struct Initialize<'info> {
 impl<'info> Initialize<'info> {
     pub fn init(
         &mut self,
-        points_per_goal: u16,
-        authority: Option<Pubkey>, // you can pass Some|Pubkey or None
+        first_completed_points: u16,
+        daily_points: u16,
         bumps: &InitializeBumps,
     ) -> Result<()> {
-        require!(points_per_goal > 10000, MomentumFiError::TooBigPointsValue);
+        require!(first_completed_points > 0 && first_completed_points < 10000, MomentumFiError::TooBigPointsValue);
 
         self.config.set_inner(Config {
-            authority,
-            points_per_goal,
+            authority: self.admin.key(),
+            first_completed_points,
+            daily_points,
+            sol_price: 0,
+            price_last_updated: 0,
             config_bump: bumps.config,
             rewards_bump: bumps.rewards_mint,
         });
