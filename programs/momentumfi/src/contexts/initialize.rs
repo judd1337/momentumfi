@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token};
 
-use crate::{state::Config, errors::MomentumFiError};
+use crate::errors::MomentumFiError;
+use crate::state::Config;
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {

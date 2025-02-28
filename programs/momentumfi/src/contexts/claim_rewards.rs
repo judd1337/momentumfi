@@ -1,10 +1,8 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{mint_to, MintTo, Mint, Token};
 
-use crate::state::UserAccount;
-use crate::state::Config;
 use crate::errors::MomentumFiError;
-
+use crate::state::{UserAccount, Config};
 
 #[derive(Accounts)]
 pub struct ClaimRewards<'info> {

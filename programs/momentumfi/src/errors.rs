@@ -18,4 +18,6 @@ pub enum MomentumFiError{
     UnauthorizedAccess,
     #[msg("Returned an invalid timestamp")]
     InvalidTimestamp,
+    #[msg("A user account already exists for this wallet")]
+    UserAlreadyExists,
 }

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
-use crate::state::UserAccount;
-use crate::state::Config;
+use crate::errors::MomentumFiError;
+use crate::state::{UserAccount, Config};
 
 #[derive(Accounts)]
 pub struct RegisterUserAccount<'info> {
@@ -14,6 +14,7 @@ pub struct RegisterUserAccount<'info> {
         space = UserAccount::INIT_SPACE + 8,
         seeds = [b"user_account", user.key().as_ref()],
         bump,
+        constraint = user_account.to_account_info().data_len() == 0 @ MomentumFiError::UserAlreadyExists
     )]
     pub user_account: Account<'info, UserAccount>,
 

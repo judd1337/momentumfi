@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::state::GoalAccount;
+use crate::state::{GoalAccount, UserAccount};
 
 #[derive(Accounts)]
 pub struct CreateGoal<'info> {
@@ -8,10 +8,16 @@ pub struct CreateGoal<'info> {
     pub user: Signer<'info>,
 
     #[account(
+        seeds = [b"user_account", user.key().as_ref()],
+        bump = user_account.bump,
+    )]
+    pub user_account: Account<'info, UserAccount>,
+
+    #[account(
         init,
         payer = user,
         space = GoalAccount::INIT_SPACE + 8,
-        seeds = [b"goal_account", user.key().as_ref()],
+        seeds = [b"goal_account", user_account.key().as_ref()],
         bump,
     )]
     pub goal_account: Account<'info, GoalAccount>,
@@ -33,7 +39,7 @@ impl<'info> CreateGoal<'info> {
             completed: false,
             first_completed_bonus: false,
             last_daily_reward_timestamp: 0,
-            bump: bumps.goal_account 
+            bump: bumps.goal_account
         });
 
         Ok(())
