@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{mint_to, MintTo, Mint, Token};
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::{mint_to, Mint, MintTo, Token, TokenAccount};
 
 use crate::errors::MomentumFiError;
 use crate::state::{UserAccount, Config};
@@ -8,6 +9,14 @@ use crate::state::{UserAccount, Config};
 pub struct ClaimRewards<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+
+    #[account(
+        init_if_needed,
+        payer = user,
+        associated_token::mint = rewards_mint,
+        associated_token::authority = user
+    )]
+    pub user_rewards_ata: Account<'info, TokenAccount>, // User's ATA for the reward tokens
     
     #[account(
         mut,
@@ -31,6 +40,7 @@ pub struct ClaimRewards<'info> {
 
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 impl<'info> ClaimRewards<'info> {
@@ -54,7 +64,7 @@ impl<'info> ClaimRewards<'info> {
 
         let cpi_accounts = MintTo {
             mint: ctx.accounts.rewards_mint.to_account_info(), 
-            to: ctx.accounts.user.to_account_info(),
+            to: ctx.accounts.user_rewards_ata.to_account_info(),
             authority: ctx.accounts.config.to_account_info(),
         };
 
