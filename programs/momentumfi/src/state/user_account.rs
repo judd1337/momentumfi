@@ -11,5 +11,5 @@ pub struct UserAccount {
 }
 
 impl Space for UserAccount {
-    const INIT_SPACE: usize =  8 + 8 + 4 + 8 + 1;
+    const INIT_SPACE: usize =  32 + 8 + 8 + 8 + 8 + 1;
 }

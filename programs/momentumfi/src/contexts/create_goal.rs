@@ -23,7 +23,6 @@ pub struct CreateGoal<'info> {
     pub goal_account: Account<'info, GoalAccount>,
 
     pub system_program: Program<'info, System>,
-
 }
 
 impl<'info> CreateGoal<'info> {

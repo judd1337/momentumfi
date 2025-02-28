@@ -38,9 +38,9 @@ pub struct ClaimRewards<'info> {
     )]
     pub rewards_mint: Account<'info, Mint>,
 
-    pub system_program: Program<'info, System>,
-    pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
+    pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
 }
 
 impl<'info> ClaimRewards<'info> {

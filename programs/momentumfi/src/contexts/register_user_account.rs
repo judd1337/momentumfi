@@ -20,18 +20,17 @@ pub struct RegisterUserAccount<'info> {
 
     #[account(
         seeds = [b"config"],
-        bump = config.config_bump,
+        bump = config_account.config_bump,
     )]
-    pub config: Account<'info, Config>,
+    pub config_account: Account<'info, Config>,
 
     pub system_program: Program<'info, System>,
-
 }
 
 impl<'info> RegisterUserAccount<'info> {
     pub fn register_user_account(&mut self, bumps: &RegisterUserAccountBumps) -> Result<()> {
         let sol_balance = self.user.lamports();
-        let usd_balance = (sol_balance as u128 * self.config.sol_price as u128 / 1_000_000_000) as u64;
+        let usd_balance = (sol_balance as u128 * self.config_account.sol_price as u128 / 1_000_000_000) as u64;
 
         self.user_account.set_inner(UserAccount { 
             owner: self.user.key(),

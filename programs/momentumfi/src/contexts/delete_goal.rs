@@ -24,7 +24,6 @@ pub struct DeleteGoal<'info> {
     pub goal_account: Account<'info, GoalAccount>,
 
     pub system_program: Program<'info, System>,
-
 }
 
 impl<'info> DeleteGoal<'info> {

@@ -14,22 +14,22 @@ pub struct Initialize<'info> {
         payer = admin,
         seeds = [b"config"],
         bump,
-        space = Config::INIT_SPACE,
+        space = Config::INIT_SPACE + 8,
     )]
-    pub config: Account<'info, Config>,
+    pub config_account: Account<'info, Config>,
 
     #[account(
         init,
         payer = admin,
-        seeds = [b"rewards", config.key().as_ref()],
+        seeds = [b"rewards", config_account.key().as_ref()],
         mint::decimals = 6,
-        mint::authority = config,
+        mint::authority = config_account,
         bump,
     )]
     pub rewards_mint: Account<'info, Mint>,
 
-    pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
+    pub system_program: Program<'info, System>,
 }
 
 impl<'info> Initialize<'info> {
@@ -39,17 +39,25 @@ impl<'info> Initialize<'info> {
         daily_points: u16,
         bumps: &InitializeBumps,
     ) -> Result<()> {
+        msg!("🚀 Initialize instruction called!");
+        msg!("🔹 First completed points: {}", first_completed_points);
+        msg!("🔹 Daily points: {}", daily_points);
+        msg!("🔹 Admin: {:?}", self.admin.key());
+        msg!("🔹 Config PDA: {:?}", self.config_account.key());
+
         require!(first_completed_points > 0 && first_completed_points < 10000, MomentumFiError::TooBigPointsValue);
 
-        self.config.set_inner(Config {
+        self.config_account.set_inner(Config {
             authority: self.admin.key(),
             first_completed_points,
             daily_points,
             sol_price: 0,
             price_last_updated: 0,
-            config_bump: bumps.config,
+            config_bump: bumps.config_account,
             rewards_bump: bumps.rewards_mint,
         });
+
+        msg!("✅ Config account successfully set!");
 
         Ok(())
     }
