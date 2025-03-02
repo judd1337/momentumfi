@@ -18,7 +18,7 @@ pub struct DeleteGoal<'info> {
         mut,
         close = user, // Refund rent to the user when closing the account
         has_one = user @ MomentumFiError::UnauthorizedDelete, // Ensure the user is the owner
-        seeds = [b"goal_account", user_account.key().as_ref()],
+        seeds = [b"goal_account", user_account.key().as_ref(), &goal_account.goal_number.to_le_bytes()],
         bump = goal_account.bump,
     )]
     pub goal_account: Account<'info, GoalAccount>,

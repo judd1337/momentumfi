@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use pyth_solana_receiver_sdk::price_update::{PriceUpdateV2};
+use pyth_solana_receiver_sdk::price_update::PriceUpdateV2;
 use chrono::{NaiveDateTime, Timelike, Utc}; // Use `chrono` for time calculations
 
 use crate::errors::MomentumFiError;
@@ -54,8 +54,12 @@ impl<'info> UpdateRewardPointsAdmin<'info> {
         let mut new_reward_points = 0;
         // Loop through remaining accounts and manually read/write GoalAccounts
         for account_info in ctx.remaining_accounts.iter() {
-            // Manually deserialize the GoalAccount
-            let mut goal_account = GoalAccount::try_from_slice(&account_info.data.borrow())?;
+            // Get a copy of the original data with discriminator
+            let mut goal_account_data = account_info.data.borrow_mut();
+            let discriminator = goal_account_data[0..8].to_vec();
+
+            // Deserialize the account data (skipping the 8-byte anchor discriminator)
+            let mut goal_account = GoalAccount::try_from_slice(&goal_account_data[8..])?;
             
             goal_account.completed = is_goal_completed(user_account.usd_balance, &mut goal_account);
             
@@ -71,8 +75,12 @@ impl<'info> UpdateRewardPointsAdmin<'info> {
                 }              
             }
 
-            // Manually serialize back
-            goal_account.serialize(&mut *account_info.try_borrow_mut_data()?)?;
+            // When serializing back, manually prepend the discriminator
+            let serialized_data = goal_account.try_to_vec()?;
+
+            // Manually serialize discriminator and data back to account
+            goal_account_data[0..8].copy_from_slice(&discriminator);
+            goal_account_data[8..8+serialized_data.len()].copy_from_slice(&serialized_data);
         }
 
         // Update user rewards

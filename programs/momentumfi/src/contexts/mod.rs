@@ -18,6 +18,3 @@ pub mod update_reward_points_admin;
 
 pub use update_reward_points_user::*;
 pub mod update_reward_points_user;
-
-pub use update_sol_price::*;
-pub mod update_sol_price;

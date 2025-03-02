@@ -20,4 +20,10 @@ pub enum MomentumFiError{
     InvalidTimestamp,
     #[msg("A user account already exists for this wallet")]
     UserAlreadyExists,
+    #[msg("This account already exist")]
+    AccountAlreadyExists,
+    #[msg("The goal account deserialization failed")]
+    AccountDeserializationFailed,
+    #[msg("User has no goals")]
+    NoGoalsExist,
 }

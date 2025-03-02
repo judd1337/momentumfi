@@ -10,7 +10,7 @@ pub struct Initialize<'info> {
     pub admin: Signer<'info>,
 
     #[account(
-        init,
+        init_if_needed,
         payer = admin,
         seeds = [b"config"],
         bump,
@@ -19,7 +19,7 @@ pub struct Initialize<'info> {
     pub config_account: Account<'info, Config>,
 
     #[account(
-        init,
+        init_if_needed,
         payer = admin,
         seeds = [b"rewards", config_account.key().as_ref()],
         mint::decimals = 6,

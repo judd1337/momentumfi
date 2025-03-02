@@ -1,7 +1,7 @@
 [package]
 name = "momentumfi"
-version = "0.1.0"
-description = "Created with Anchor"
+version = "0.1.1"
+description = "A wallet tracker with a gamified way of setting investment goals"
 edition = "2021"
 
 [lib]

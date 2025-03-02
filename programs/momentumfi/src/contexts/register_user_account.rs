@@ -14,7 +14,6 @@ pub struct RegisterUserAccount<'info> {
         space = UserAccount::INIT_SPACE + 8,
         seeds = [b"user_account", user.key().as_ref()],
         bump,
-        constraint = user_account.to_account_info().data_len() == 0 @ MomentumFiError::UserAlreadyExists
     )]
     pub user_account: Account<'info, UserAccount>,
 
@@ -38,6 +37,7 @@ impl<'info> RegisterUserAccount<'info> {
             claimable_rewards: 0,
             sol_balance: sol_balance,
             usd_balance: usd_balance,
+            goal_count: 0,
             bump: bumps.user_account 
         });
 

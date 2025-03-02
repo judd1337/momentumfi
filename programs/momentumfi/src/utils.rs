@@ -6,6 +6,8 @@ use crate::state::{UserAccount, GoalAccount, Config};
 // Constants
 pub const MAXIMUM_AGE: u64 = 1800; // 30 Minutes
 pub const FEED_ID: &str = "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d";
+pub const LAMPORTS_PER_SOL: u128 = 1_000_000_000; 
+pub const PRICE_PER_SOL_PRECISION: u128 = 1_000_000_00; 
 
 // Function to get the current SOL price and update the config
 pub fn update_sol_price<'info>(
@@ -31,7 +33,8 @@ pub fn update_user_account<'info>(
     config: &Account<'info, Config>,
 ) -> Result<()> {
     user_account.sol_balance = user_wallet.lamports();
-    user_account.usd_balance = (user_account.sol_balance as u128 * config.sol_price as u128 / 1_000_000_000) as u64;
+    user_account.usd_balance = (user_account.sol_balance as u128 * config.sol_price as u128 / LAMPORTS_PER_SOL / PRICE_PER_SOL_PRECISION) as u64;
+    msg!("User USD balance is now: {}", user_account.usd_balance);
 
     Ok(())
 }

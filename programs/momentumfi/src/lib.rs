@@ -23,8 +23,8 @@ pub mod momentumfi {
         ctx.accounts.register_user_account(&ctx.bumps)
     }
 
-    pub fn create_goal(ctx: Context<CreateGoal>, target_usd: u64, deadline: Option<i64>) -> Result<()> {
-        CreateGoal::create_goal(ctx, target_usd, deadline)
+    pub fn create_goal(ctx: Context<CreateGoal>, goal_number: u64, target_usd: u64, deadline: i64) -> Result<()> {
+        CreateGoal::create_goal(ctx, goal_number, target_usd, deadline)
     }
 
     pub fn delete_goal(ctx: Context<DeleteGoal>) -> Result<()> {
@@ -39,7 +39,8 @@ pub mod momentumfi {
         UpdateRewardPointsUser::update_reward_points_user(ctx)
     }
 
-    pub fn update_sol_price(ctx: Context<UpdateSolPrice>) -> Result<()> {
-        UpdateSolPrice::request_price_update(ctx)
+    pub fn claim_rewards(ctx: Context<ClaimRewards>) -> Result<()> {
+        ClaimRewards::claim_rewards(ctx)
     }
+    
 }
